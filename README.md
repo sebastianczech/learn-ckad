@@ -2,6 +2,17 @@
 
 Learning materials collected while preparing to [Certified Kubernetes Application Developer (CKAD)](https://training.linuxfoundation.org/certification/certified-kubernetes-application-developer-ckad/).
 
+## Create a cluster
+
+```
+minikube version
+minikube start
+
+kubectl version
+kubectl cluster-info
+kubectl get nodes
+```
+
 ## Links
 
 * [Kubernetes Documentation](https://kubernetes.io/docs/home/)
