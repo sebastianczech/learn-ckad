@@ -18,6 +18,7 @@ kubectl get nodes
 * [Kubernetes Documentation](https://kubernetes.io/docs/home/)
 * [Concepts](https://kubernetes.io/docs/concepts/)
 * [Tutorials](https://kubernetes.io/docs/tutorials/)
+* [My notes e.g. commands from course "Kubernetes po polsku"](https://github.com/sebastianczech/DevOps-Engineer)
 * [Best Kubernetes Certifications for 2023](https://devopscube.com/best-kubernetes-certifications/)
 * [Open Source Curriculum for CNCF Certification Courses](https://github.com/cncf/curriculum)
 * [CKAD Exercises](https://github.com/dgkanatsios/CKAD-exercises)
