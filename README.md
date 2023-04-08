@@ -134,6 +134,41 @@ kubectl get pods
 kubectl describe pods
 ```
 
+## Notes from books
+
+### [Pods](https://kubernetes.io/docs/concepts/workloads/pods/)
+
+```
+kubectl run my-pod-name --image=docker-image-name --restart=Never
+kubectl wait --for=condition=Ready pod my-pod-name
+
+kubectl get pod my-pod-name --output custom-columns=NAME:metadata.name,NODE_IP:status.hostIP,POD_IP:status.podIP,LABELS:metadata.labels
+kubectl get pod my-pod-name -o jsonpath='{.status.containerStatuses[0].containerID}'
+
+kubectl label pods -l app=existing-label-value --overwrite app=new-label-value
+kubectl get pods -l app=new-label-value
+
+kubectl port-forward pod/my-pod-name 8080:80
+
+kubectl exec -it my-pod-name -- sh
+hostname -i
+wget -O - http://localhost | head -n 4
+
+kubectl logs --tail=2 my-pod-name
+
+kubectl create deployment my-deployment-name --image=docker-image-name
+
+kubectl exec deploy/my-deployment-name-1 -- sh -c 'wget -O - http://localhost > /dev/null'
+kubectl logs --tail=1 -l app=my-deployment-name-1
+
+kubectl delete deploy --all
+kubectl get all
+```
+
+// LKLM - 3
+// KA - 1
+// ACKAE - 1
+
 ## Links
 
 * [Kubernetes Documentation](https://kubernetes.io/docs/home/)
