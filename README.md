@@ -28,7 +28,7 @@ kubectl get nodes
 kubectl create deployment kubernetes-bootcamp --image=gcr.io/google-samples/kubernetes-bootcamp:v1
 kubectl get deployments
 
-echo -e "\n\n\n\e[92mStarting Proxy. After starting it will not output a response. Please click the first Terminal Tab\n"; 
+echo -e "\n\n\n\e[92mStarting Proxy. After starting it will not output a response. Please click the first Terminal Tab\n";
 kubectl proxy
 
 curl http://localhost:8001/version
@@ -165,7 +165,33 @@ kubectl delete deploy --all
 kubectl get all
 ```
 
-// LKLM - 3
+### [Service](https://kubernetes.io/docs/concepts/services-networking/)
+
+```
+kubectl get svc my-service-name
+kubectl get svc my-service-name -o jsonpath='http://{.status.loadBalancer.ingress[0].*}:8080'
+kubectl get endpoints my-service-name
+kubectl exec my-pod-name -- sh -c 'nslookup my-service-name | grep "^[^*]"'
+kubectl exec my-pod-name -- sh -c 'nslookup kube-dns.kube-system.svc.cluster.local | grep "^[^*]"'
+kubectl delete my-service-name
+```
+
+```
+apiVersion: v1
+kind: Service
+metadata:
+ name: my-service-name
+spec:
+ ports:
+   - port: 8080          # on this port service is available to other pods (inside Kubernetes cluster)
+     targetPort: 80      # on this port traffic is sent (on this port application in container works)
+     nodePort: 30080     # on this port service is available externally (outside Kubernetes cluster)
+ selector:
+ app: my-web-app
+ type: NodePort          # This Service is available on node IP addresses.
+```
+
+// LKLM - 4
 // KA - 1
 // ACKAE - 1
 
