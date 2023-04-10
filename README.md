@@ -592,7 +592,66 @@ helm install myapp-name mychart-local-folder/
 helm package mychart-local-folder
 ```
 
-// LKLM - 10
+### [Context](https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/)
+
+```
+kubectl config get-contexts
+kubectl config set-context --current --namespace=my-namespace
+kubectl config set-context --current --namespace=
+kubectl config view
+```
+
+## [Liveness, Readiness and Startup Probes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
+
+```
+spec:
+ containers:
+    - image: image-name
+      readinessProbe:
+        httpGet:
+          path: /healthz
+          port: 80
+        periodSeconds: 3
+      livenessProbe:
+        httpGet:
+          path: /healthz
+          port: 80
+        periodSeconds: 10
+        initialDelaySeconds: 10
+        failureThreshold: 2
+```
+
+```
+kubectl wait --for=condition=ContainersReady pod -l app=my-app-name
+```
+
+```
+spec:
+ containers:
+   - image: postgres
+     readinessProbe:
+       tcpSocket:
+         port: 5432
+       periodSeconds: 3
+     livenessProbe:
+       exec:
+         command: ["pg_isready", "-h", "localhost"]
+       periodSeconds: 10
+       initialDelaySeconds: 10
+```
+
+```
+spec:
+ containers:
+   - image: image-name
+     resources:
+       limits:
+         memory: 50Mi
+         cpu: 250m
+
+```
+
+// LKLM -
 // KA - 1
 // ACKAE - 1
 
