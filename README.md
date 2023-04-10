@@ -387,9 +387,7 @@ kubectl get pv
 kubectl get sc
 ```
 
-### Scaling
-
-[ReplicaSet](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/):
+### [ReplicaSet](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/):
 
 ```
 apiVersion: apps/v1
@@ -408,7 +406,7 @@ spec:
 kubectl get rs
 ```
 
-[Deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/):
+### [Deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/):
 
 ```
 apiVersion: apps/v1
@@ -431,7 +429,7 @@ kubectl get rs -l app=my-app-label
 kubectl get po -l app=my-app-label --show-labels
 ```
 
-[DaemonSet](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/)
+### [DaemonSet](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/)
 
 ```
 apiVersion: apps/v1
@@ -456,7 +454,7 @@ kubectl get po -l app=my-app-label
 kubectl delete ds
 ```
 
-[Init containers](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/):
+### [Init containers](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/):
 
 ```
 spec:
@@ -486,6 +484,63 @@ containers:
 # ...
    ports:
      - containerPort: 8092
+```
+
+### [StatefulSet](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/):
+
+```
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+ name: my-statefulset-name
+spec:
+ selector:
+   matchLabels:
+     app: my-app-label
+ serviceName: my-service-name
+ replicas: 2
+ template:
+```
+
+```
+kubectl get statefulset
+```
+
+### [Job](https://kubernetes.io/docs/concepts/workloads/controllers/job/)
+
+```
+apiVersion: batch/v1
+kind: Job
+metadata:
+ name: my-job-name
+spec:
+ template:
+   spec:
+     containers:
+       - name: my-container
+         image: my-image
+         command: ["java", "-jar", "app.jar"]
+     restartPolicy: Never
+```
+
+```
+kubectl get job
+```
+
+```
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+ name: my-app-backup
+spec:
+ schedule: "*/5 * * * *"     
+ concurrencyPolicy: Forbid  
+ jobTemplate: 
+   spec:
+```
+
+```
+kubectl get cronjob 
 ```
 
 // LKLM - 8
