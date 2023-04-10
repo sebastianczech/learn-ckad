@@ -676,6 +676,47 @@ spec:
 kubectl get ingress
 ```
 
+### [NetworkPolicy](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
+
+```
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+ name: my-policy-name
+spec:
+ podSelector:
+   matchLabels:
+     app: my-app-label
+ ingress:
+ - from:
+   - podSelector:
+       matchLabels:
+         app: my-db-label
+   ports:
+   - port: app
+```
+
+```
+kubectl get networkpolicy
+```
+
+### [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+
+```
+spec:
+ automountServiceAccountToken: false
+ securityContext:
+   runAsUser: 65534
+   runAsGroup: 3000
+ containers:
+   - image: my-image-name
+     securityContext:
+       allowPrivilegeEscalation: false
+       capabilities:
+         drop:
+           - all
+```
+
 // LKLM -
 // KA - 1
 // ACKAE - 1
