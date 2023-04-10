@@ -808,6 +808,93 @@ rules:
   verbs: ["get"]
 ```
 
+### [Taints and Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
+
+```
+kubectl get nodes --show-labels
+kubectl get nodes -o=jsonpath='{range .items[*]}{.metadata.name}{.spec.taints[*].key}{end}'
+
+kubectl taint nodes node1 key1=value1:NoSchedule
+kubectl taint nodes node1 key1=value1:NoSchedule-
+
+kubectl taint nodes --all node-role.kubernetes.io/master-
+```
+
+```
+spec:
+ containers:
+   - name: my-pod-name
+     image: my-image-name
+     imagePullPolicy: IfNotPresent
+ tolerations:
+     - key: "my-key-name"
+       operator: "Equal"
+       value: "my-key-value"
+       effect: "NoSchedule"
+ nodeSelector:
+   disktype: ssd
+```
+
+```
+affinity:
+ nodeAffinity:
+   requiredDuringSchedulingIgnoredDuringExecution:
+     nodeSelectorTerms:
+       - matchExpressions:
+         - key: kubernetes.io/arch
+           operator: In
+           values:
+             - amd64
+         - key: kubernetes.io/os
+           operator: In
+           values:
+             - linux
+             - windows
+   preferredDuringSchedulingIgnoredDuringExecution:
+     - weight: 1
+       preference:
+       matchExpressions:
+       - key: kubernetes.io/os
+         operator: In
+          values:
+           - linux
+```
+
+```
+affinity:
+ podAffinity:
+   requiredDuringSchedulingIgnoredDuringExecution:
+     - labelSelector:
+         matchExpressions:
+           - key: app
+             operator: In
+             values:
+               - my-app-name
+       topologyKey: "kubernetes.io/hostname"
+```
+
+### [HorizontalPodAutoscaler](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/)
+
+```
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+ name: my-hpa
+spec:
+ scaleTargetRef:
+   apiVersion: apps/v1
+   kind: Deployment
+   name: my-deployment
+ minReplicas: 1
+ maxReplicas: 5
+ targetCPUUtilizationPercentage: 75
+```
+
+```
+kubectl get hpa my-hpa
+kubectl top pods -l app=my-app-name
+```
+
 // KA - 1
 // ACKAE - 1
 
