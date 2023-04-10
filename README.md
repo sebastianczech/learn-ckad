@@ -533,17 +533,66 @@ kind: CronJob
 metadata:
  name: my-app-backup
 spec:
- schedule: "*/5 * * * *"     
- concurrencyPolicy: Forbid  
- jobTemplate: 
+ schedule: "*/5 * * * *"
+ concurrencyPolicy: Forbid
+ jobTemplate:
    spec:
 ```
 
 ```
-kubectl get cronjob 
+kubectl get cronjob
 ```
 
-// LKLM - 8
+### [Rolling Back a Deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-back-a-deployment)
+
+```
+kubectl rollout history deploy/my-deployment-name
+kubectl rollout status deploy/my-deployment-name
+
+kubectl get rs -l app=my-app-label -o=custom-columns=NAME:.metadata.name,REPLICAS:.status.replicas,REVISION:.metadata.annotations.deployment\.kubernetes\.io/revision
+
+kubectl rollout undo deploy/my-deployment-name --dry-run
+kubectl rollout undo deploy/my-deployment-name --to-revision=1
+kubectl rollout status deploy/my-deployment-name  --timeout=1s
+```
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: vweb
+spec:
+ replicas: 3
+ strategy:
+   type: Recreate # by default for deployment there is strategy RollingUpdate
+```
+
+### [Helm](https://helm.sh/docs/)
+
+```
+helm repo add myrepo https://myrepo
+helm repo update
+
+helm search repo myapp --versions
+helm show values myrepo/myapp --version 1.0.0
+
+helm install --set servicePort=8010 --set replicaCount=1 myapp-name myrepo/myapp --version 1.0.0
+helm upgrade --set servicePort=8010 --set replicaCount=3 myapp-name myrepo/myapp --version 1.0.0
+helm upgrade --reuse-values --atomic myapp-name myrepo/myapp --version 1.0.0
+helm uninstall myapp-name
+helm uninstall $(helm ls -q)
+
+helm history myapp-name
+helm rollback myapp-name 2
+helm get values myapp-name
+helm ls
+
+helm lint mychart-local-folder
+helm install myapp-name mychart-local-folder/
+helm package mychart-local-folder
+```
+
+// LKLM - 10
 // KA - 1
 // ACKAE - 1
 
