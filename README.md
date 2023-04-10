@@ -156,6 +156,7 @@ wget -O - http://localhost | head -n 4
 
 kubectl logs --tail=2 my-pod-name
 kubectl logs -l app=my-label-value
+kubectl logs -l app=my-label-value -c my-container-name-in-multi-conatiner-pod
 
 kubectl create deployment my-deployment-name --image=docker-image-name
 
@@ -169,6 +170,7 @@ kubectl get all
 ### [Service](https://kubernetes.io/docs/concepts/services-networking/)
 
 ```
+kubectl expose -f file.yaml --type LoadBalancer --port 8080 --target-port 80
 kubectl get svc my-service-name
 kubectl get svc my-service-name -o jsonpath='http://{.status.loadBalancer.ingress[0].*}:8080'
 kubectl get endpoints my-service-name
@@ -385,10 +387,6 @@ kubectl get pv
 kubectl get sc
 ```
 
-// LKLM - 7
-// KA - 1
-// ACKAE - 1
-
 ### Scaling
 
 [ReplicaSet](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/):
@@ -442,7 +440,7 @@ metadata:
  name: my-daemon-name
 spec:
  selector:
-   matchLabels:     
+   matchLabels:
      app: my-app-label
 template:
  metadata:
@@ -455,8 +453,44 @@ spec:
 kubectl get ds
 kubectl delete ds my-daemon-name --cascade=false
 kubectl get po -l app=my-app-label
-kubectl delete ds 
+kubectl delete ds
 ```
+
+[Init containers](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/):
+
+```
+spec:
+ initContainers:
+   - name: my-init-container-name
+     image: image
+     command: ['sh', '-c', "# some command to initalize application in /data"]
+     volumeMounts:
+    - name: data
+      mountPath: /data
+```
+
+```
+initContainers:
+ - name: configure-app
+# ...
+containers:
+ - name: legacy-app
+# ...
+ - name: logger-app
+# ...
+ - name: health-app
+# ...
+   ports:
+     - containerPort: 8091
+ - name: metrics-app
+# ...
+   ports:
+     - containerPort: 8092
+```
+
+// LKLM - 8
+// KA - 1
+// ACKAE - 1
 
 ## Links
 
