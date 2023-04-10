@@ -717,7 +717,97 @@ spec:
            - all
 ```
 
-// LKLM -
+### [RBAC](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
+
+```
+kubectl api-versions
+kubectl get clusterroles
+kubectl get clusterrolebinding
+kubectl describe clusterrole cluster-admin
+kubectl get serviceaccounts
+```
+
+```
+kubectl auth can-i "*" "*"
+kubectl auth can-i "*" "*" --as system:serviceaccount:my-service-account-name:default
+kubectl auth can-i get pods -n my-namespace-name --as system:serviceaccount:my-service-account-name:default
+
+kubectl exec user1 -- kubectl auth can-i delete pods
+kubectl exec user2 -- kubectl get pods
+```
+
+```
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: my-reader-role
+  namespace: kube-system
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+```
+
+```
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: kube-explorer-system
+  namespace: kube-system
+subjects:
+- kind: ServiceAccount
+  name: kube-explorer
+  namespace: default
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: my-reader-role
+```
+
+```
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: my-reader-role-binding
+  namespace: default
+subjects:
+- kind: User
+  name: sebaczech@mail
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: ClusterRole
+  name: view
+  apiGroup: rbac.authorization.k8s.io
+```
+
+```
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: my-cluste-role-create-approve-csr
+rules:
+- apiGroups: ["certificates.k8s.io"]
+  resources: ["certificatesigningrequests"]
+  verbs: ["create", "get", "list", "watch"]
+- apiGroups: ["certificates.k8s.io"]
+  resources: ["certificatesigningrequests/approval"]
+  verbs: ["update"]
+- apiGroups:  ["certificates.k8s.io"]
+  resources:  ["signers"]
+  resourceNames:  ["kubernetes.io/kube-apiserver-client"]
+  verbs: ["approve"]
+```
+
+```
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: my-log-reader
+rules:
+- apiGroups: [""]
+  resources: ["pods ", "pods/log"]
+  verbs: ["get"]
+```
+
 // KA - 1
 // ACKAE - 1
 
