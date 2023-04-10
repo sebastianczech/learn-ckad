@@ -651,6 +651,31 @@ spec:
 
 ```
 
+### [Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/)
+
+```
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+ name: my-ingress
+spec:
+ rules:
+ - http:
+     paths:
+     - path: /
+       backend:
+         serviceName: my-service-name1
+         servicePort: 80
+     - path: /app2
+       backend:
+         serviceName: my-service-name2
+         servicePort: 80
+```
+
+```
+kubectl get ingress
+```
+
 // LKLM -
 // KA - 1
 // ACKAE - 1
