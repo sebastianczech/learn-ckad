@@ -257,12 +257,12 @@ spec:
 
 ```
 apiVersion: v1
-kind: Secret                            
+kind: Secret
 metadata:
  name: my-secret-name
-type: Opaque                          
-stringData:                           
- DB_PASSWORD: "***"     
+type: Opaque
+stringData:
+ DB_PASSWORD: "***"
 ```
 
 ```
@@ -275,18 +275,18 @@ spec:
    - name: my-app-name
      image: my-image-name
      env:
-     - name: DB_PASSWORD_FILE      
+     - name: DB_PASSWORD_FILE
        value: /secrets/db_password
-     volumeMounts:                       
-       - name: secret                  
-         mountPath: "/secrets"            
+     volumeMounts:
+       - name: secret
+         mountPath: "/secrets"
  volumes:
    - name: secret
-     secret:                           
+     secret:
        secretName: my-secret-name
-       defaultMode: 0400               
-       items:                          
-       - key: DB_PASSWORD  
+       defaultMode: 0400
+       items:
+       - key: DB_PASSWORD
          path: db_password
 ```
 
@@ -294,9 +294,144 @@ spec:
 kubectl exec deploy/my-app-name -- sh -c 'ls -l $(readlink -f /secrets/db_password)'
 ```
 
-// LKLM - 4
+### [Volume and claims](https://kubernetes.io/docs/concepts/storage/)
+
+[emptyDir](https://kubernetes.io/docs/concepts/storage/volumes/#emptydir):
+
+```
+spec:
+ containers:
+   - name: my-pod-name
+     image: my-image-name
+     volumeMounts:
+      - name: data
+         mountPath: /data
+ volumes:
+   - name: data
+     emptyDir: {}
+```
+
+[hostPath](https://kubernetes.io/docs/concepts/storage/volumes/#hostpath):
+
+```
+spec:
+ containers:
+  - image: nginx
+    name: nginx
+    ports:
+       - containerPort: 80
+    volumeMounts:
+       - name: cache-volume
+         mountPath: /data/nginx/cache
+ volumes:
+   - name: cache-volume
+     hostPath:
+       path: /volumes/nginx/cache
+       type: DirectoryOrCreate
+```
+
+[NSF volume](https://kubernetes.io/docs/concepts/storage/volumes/#nfs):
+
+```
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+ name: my-pv-name
+
+spec:
+ capacity:
+   storage: 100Mi
+ accessModes:
+   - ReadWriteOnce
+
+ nfs:
+   server: my-nfs-server.example.com
+   path: /my-nfs-volume
+```
+
+[PersistentVolumeClaim](https://kubernetes.io/docs/concepts/storage/persistent-volumes/):
+
+```
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+ name: my-pvc-name
+spec:
+ accessModes:
+   - ReadWriteOnce
+ resources:
+   requests:
+     storage: 40Mi
+ storageClassName: "" # if there is no storageClassName field, then this uses the default class
+```
+
+```
+spec:
+ containers:
+   - name: my-pod-name
+     image: nginx
+     volumeMounts:
+       - name: data
+         mountPath: /data
+ volumes:
+   - name: data
+     persistentVolumeClaim:
+       claimName: my-pvc-name
+```
+
+```
+kubectl get pvc
+kubectl get pv
+kubectl get sc
+```
+
+// LKLM - 7
 // KA - 1
 // ACKAE - 1
+
+### Scaling
+
+[ReplicaSet](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/):
+
+```
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+ name: my-replica-name
+spec:
+ replicas: 1
+ selector:
+   matchLabels:
+     app: my-app-label
+ template:
+```
+
+```
+kubectl get rs
+```
+
+[Deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/):
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: my-deployment-name
+spec:
+ replicas: 2
+selector:
+ matchLabels:
+   app: my-app-label
+ template:
+```
+
+```
+kubectl get deployment
+
+kubectl scale --replicas=4 deploy/my-deployment-name
+kubectl get rs -l app=my-app-label
+kubectl get po -l app=my-app-label --show-labels
+```
 
 ## Links
 
