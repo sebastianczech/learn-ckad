@@ -433,6 +433,31 @@ kubectl get rs -l app=my-app-label
 kubectl get po -l app=my-app-label --show-labels
 ```
 
+[DaemonSet](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/)
+
+```
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+ name: my-daemon-name
+spec:
+ selector:
+   matchLabels:     
+     app: my-app-label
+template:
+ metadata:
+   labels:
+     app: my-app-label
+spec:
+```
+
+```
+kubectl get ds
+kubectl delete ds my-daemon-name --cascade=false
+kubectl get po -l app=my-app-label
+kubectl delete ds 
+```
+
 ## Links
 
 * [Kubernetes Documentation](https://kubernetes.io/docs/home/)
