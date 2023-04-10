@@ -155,6 +155,7 @@ hostname -i
 wget -O - http://localhost | head -n 4
 
 kubectl logs --tail=2 my-pod-name
+kubectl logs -l app=my-label-value
 
 kubectl create deployment my-deployment-name --image=docker-image-name
 
@@ -189,6 +190,108 @@ spec:
  selector:
  app: my-web-app
  type: NodePort          # This Service is available on node IP addresses.
+```
+
+### [ConfigMap and Secrets](https://kubernetes.io/docs/concepts/configuration/)
+
+```
+kubectl create configmap my-config-map --from-literal=setting.name='setting.value'
+kubectl get cm my-config-map
+kubectl exec deploy/my-deploy-name -- sh -c 'printenv | grep "^SETTING"'
+```
+
+```
+apiVersion: v1
+kind: ConfigMap
+metadata:
+ name: my-app-config-file
+data:
+ config.json: |-
+   {
+     "Configuration": {
+       "Enabled" : true
+     }
+   }
+ logging.json: |-
+   {
+     "Logging": {
+       "LogLevel": "Debug"
+     }
+   }
+```
+
+```
+spec:
+ containers:
+   - name: my-app-name
+     image: my-image-name
+     volumeMounts:
+       - name: config
+         mountPath: "/app/config"
+         readOnly: true
+
+ volumes:
+   - name: config
+     configMap:
+       name: my-app-config-file
+```
+
+```
+kubectl create secret generic my-secret --from-literal=secret=sensitivevaue
+kubectl get secret my-secret -o jsonpath='{.data.secret}'
+kubectl get secret my-secret -o jsonpath='{.data.secret}' | base64 -d
+```
+
+```
+spec:
+ containers:
+   - name: my-app-name
+     image: my-image-name
+     env:
+     - name: MY_SECRET
+       valueFrom:
+         secretKeyRef:
+           name: my-secret
+           key: secret
+```
+
+```
+apiVersion: v1
+kind: Secret                            
+metadata:
+ name: my-secret-name
+type: Opaque                          
+stringData:                           
+ DB_PASSWORD: "***"     
+```
+
+```
+kubectl get secret my-secret-name -o jsonpath='{.data.DB_PASSWORD}'
+```
+
+```
+spec:
+ containers:
+   - name: my-app-name
+     image: my-image-name
+     env:
+     - name: DB_PASSWORD_FILE      
+       value: /secrets/db_password
+     volumeMounts:                       
+       - name: secret                  
+         mountPath: "/secrets"            
+ volumes:
+   - name: secret
+     secret:                           
+       secretName: my-secret-name
+       defaultMode: 0400               
+       items:                          
+       - key: DB_PASSWORD  
+         path: db_password
+```
+
+```
+kubectl exec deploy/my-app-name -- sh -c 'ls -l $(readlink -f /secrets/db_password)'
 ```
 
 // LKLM - 4
