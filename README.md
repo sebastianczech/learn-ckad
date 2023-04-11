@@ -895,8 +895,45 @@ kubectl get hpa my-hpa
 kubectl top pods -l app=my-app-name
 ```
 
+### Linux services
+
+```
+sudo systemctl list-unit-files --type service --all | grep kubelet -a6
+sudo systemctl list-unit-files --type service --all | grep journald.service
+```
+
+### Docker
+
+```
+docker exec -it kind-control-plane bash
+# apt update; apt install -y kubeadm=1.24.3-00
+# kubeadm upgrade plan
+
+# crictl ps
+# systemctl status kubelet
+# systemctl stop kubelet
+```
+
+### etcd
+
+```
+docker exec -it kind-control-plane bash
+# apt update; apt install -y etcd-client
+# export ETCDCTL_API=3
+# etcdctl snapshot save snapshotdb --cacert /etc/kubernetes/pki/etcd/ca.crt --cert /etc/kubernetes/pki/etcd/server.crt --key /etc/kubernetes/pki/etcd/server.key
+# etcdctl snapshot status snapshotdb --write-out=table
+# etcdctl snapshot restore snapshotdb --data-dir /var/lib/etcd-restore
+
+# apt install update; apt install vim
+# vim /etc/kubernetes/manifests/etcd.yaml ### change /var/lib/etcd to /var/lib/etcd-restore
+
+# ls /etc/kubernetes
+# ls /etc/kubernetes/pki
+# cat /etc/kubernetes/kubelet.conf
+```
+
+// ACKAE - 3
 // KA - 1
-// ACKAE - 1
 
 ## Links
 
