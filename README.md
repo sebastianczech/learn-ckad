@@ -728,12 +728,24 @@ kubectl get serviceaccounts
 ```
 
 ```
+kubectl auth can-i --list
 kubectl auth can-i "*" "*"
 kubectl auth can-i "*" "*" --as system:serviceaccount:my-service-account-name:default
 kubectl auth can-i get pods -n my-namespace-name --as system:serviceaccount:my-service-account-name:default
 
 kubectl exec user1 -- kubectl auth can-i delete pods
 kubectl exec user2 -- kubectl get pods
+```
+
+```
+kubectl create role my-reader-role-cli --verb=get,list,watch --resource=pods
+kubectl get role my-reader-role-cli -o yaml
+kubectl create role my-reader-role-cli --verb=get,list,watch --resource=pods --dry-run=client -o yaml > role.yaml
+
+kubectl create rolebinding my-reader-role-cli-binding --role=my-reader-role-cli --user=seba
+
+kubectl auth can-i get pods -n default --as seba
+kubectl auth can-i delete pods -n default --as seba
 ```
 
 ```
@@ -806,6 +818,57 @@ rules:
 - apiGroups: [""]
   resources: ["pods ", "pods/log"]
   verbs: ["get"]
+```
+
+### Users
+
+```
+openssl genrsa -out seba.key 2048
+openssl req -new -key seba.key -subj "/CN=seba/O=company" -out seba.csr
+export REQUEST=$(cat seba.csr | base64 -w 0)
+
+cat <<EOF | kubectl apply -f -
+apiVersion: certificates.k8s.io/v1
+kind: CertificateSigningRequest
+metadata:
+name: seba
+spec:
+groups:
+- company
+request: $REQUEST
+signerName: kubernetes.io/kube-apiserver-client
+usages:
+- client auth
+EOF
+
+kubectl get csr
+kubectl certificate approve seba
+kubectl get csr seba -o jsonpath='{.status.certificate}' | base64 -d > seba.crt
+kubectl config set-credentials seba --client-key=seba.key --client-certificate=seba.crt --embed-certs
+kubectl config view
+kubectl config set-context seba --user=seba --cluster=kind
+kubectl config get-contexts
+kubectl config use-context seba
+```
+
+```
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: build-robot
+automountServiceAccountToken: false
+...
+```
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+spec:
+  serviceAccountName: build-robot
+  automountServiceAccountToken: false
+  ...
 ```
 
 ### [Taints and Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
@@ -932,7 +995,7 @@ docker exec -it kind-control-plane bash
 # cat /etc/kubernetes/kubelet.conf
 ```
 
-// ACKAE - 3
+// ACKAE - 4
 // KA - 1
 
 ## Links
