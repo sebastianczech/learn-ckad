@@ -874,6 +874,7 @@ spec:
 ### [Taints and Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
 
 ```
+kubectl label node kind-worker disktype=ssd
 kubectl get nodes --show-labels
 kubectl get nodes -o=jsonpath='{range .items[*]}{.metadata.name}{.spec.taints[*].key}{end}'
 
@@ -896,6 +897,10 @@ spec:
        effect: "NoSchedule"
  nodeSelector:
    disktype: ssd
+```
+
+```
+kubectl run affinity --image nginx --dry-run=client -o yaml > affinity.yaml
 ```
 
 ```
