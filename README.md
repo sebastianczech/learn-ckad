@@ -554,6 +554,8 @@ kubectl get rs -l app=my-app-label -o=custom-columns=NAME:.metadata.name,REPLICA
 kubectl rollout undo deploy/my-deployment-name --dry-run
 kubectl rollout undo deploy/my-deployment-name --to-revision=1
 kubectl rollout status deploy/my-deployment-name  --timeout=1s
+kubectl rollout pause deploy/my-deployment-name
+kubectl rollout resume deploy/my-deployment-name
 ```
 
 ```
@@ -941,6 +943,12 @@ affinity:
        topologyKey: "kubernetes.io/hostname"
 ```
 
+```
+kubectl cordon node kind-worker # disable scheduling
+kubectl drain kind-worker –-ignore-daemonsets
+kubectl uncordon kind-worker # enable scheduling
+```
+
 ### [HorizontalPodAutoscaler](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/)
 
 ```
@@ -982,6 +990,12 @@ docker exec -it kind-control-plane bash
 # systemctl stop kubelet
 ```
 
+### kubeadm
+
+```
+kubeadm token create --print-join-command
+```
+
 ### etcd
 
 ```
@@ -1000,7 +1014,7 @@ docker exec -it kind-control-plane bash
 # cat /etc/kubernetes/kubelet.conf
 ```
 
-// ACKAE - 4
+// ACKAE - 5
 // KA - 1
 
 ## Links
