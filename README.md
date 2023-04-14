@@ -988,12 +988,15 @@ docker exec -it kind-control-plane bash
 # crictl ps
 # systemctl status kubelet
 # systemctl stop kubelet
+# systmectl restart kubelet
+# systemctl daemon-reload
 ```
 
 ### kubeadm
 
 ```
 kubeadm token create --print-join-command
+kubeadm upgrade node phase kubelet-config
 ```
 
 ### etcd
@@ -1013,9 +1016,6 @@ docker exec -it kind-control-plane bash
 # ls /etc/kubernetes/pki
 # cat /etc/kubernetes/kubelet.conf
 ```
-
-// ACKAE - 5
-// KA - 1
 
 ## Links
 
