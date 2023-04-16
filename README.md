@@ -1043,6 +1043,13 @@ docker exec -it kind-control-plane bash
 # cat /etc/kubernetes/kubelet.conf
 ```
 
+### [Metrics](https://github.com/kubernetes-sigs/metrics-server)
+
+```
+kubectl top node
+kubectl top pod
+```
+
 ## Links
 
 * [Kubernetes Documentation](https://kubernetes.io/docs/home/)
