@@ -949,6 +949,32 @@ kubectl drain kind-worker –-ignore-daemonsets
 kubectl uncordon kind-worker # enable scheduling
 ```
 
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: annotation-default-scheduler
+  labels:
+    name: multischeduler-example
+spec:
+  schedulerName: default-scheduler
+  containers:
+  - name: pod-with-default-annotation-container
+    image: registry.k8s.io/pause:2.0
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: annotation-second-scheduler
+  labels:
+    name: multischeduler-example
+spec:
+  schedulerName: my-scheduler
+  containers:
+  - name: pod-with-second-annotation-container
+    image: registry.k8s.io/pause:2.0
+```
+
 ### [HorizontalPodAutoscaler](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/)
 
 ```
