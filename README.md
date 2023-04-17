@@ -167,6 +167,22 @@ kubectl delete deploy --all
 kubectl get all
 ```
 
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: command-demo
+  labels:
+    purpose: demonstrate-command
+spec:
+  containers:
+  - name: command-demo-container
+    image: debian
+    command: ["printenv"]
+    args: ["HOSTNAME", "KUBERNETES_PORT"]
+  restartPolicy: OnFailure
+```
+
 ### [Service](https://kubernetes.io/docs/concepts/services-networking/)
 
 ```
