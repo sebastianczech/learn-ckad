@@ -334,6 +334,9 @@ spec:
 ```
 
 ```
+echo -n 'plaintext' | base64
+echo -n 'cGxhaW50ZXh0' | base64 --decode
+
 kubectl create secret generic my-secret --from-literal=secret=sensitivevaue
 kubectl get secret my-secret -o jsonpath='{.data.secret}'
 kubectl get secret my-secret -o jsonpath='{.data.secret}' | base64 -d
