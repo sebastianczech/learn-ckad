@@ -394,6 +394,61 @@ spec:
 kubectl exec deploy/my-app-name -- sh -c 'ls -l $(readlink -f /secrets/db_password)'
 ```
 
+```
+apiVersion: v1
+kind: Secret
+metadata:
+  name: db-secret
+type: Opaque
+stringData:
+  DB_Host: sql01
+  DB_User: root
+  DB_Password: password123
+```
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-app-name
+spec:
+  containers:
+  - image: my-image-name
+    name: my-app-name
+    envFrom:
+    - secretRef:
+        name: db-secret
+........
+```
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-app-name
+spec:
+  containers:
+  - image: my-image-name
+    name: my-app-name
+    env:
+    - name: DB_Host
+      valueFrom:
+        secretKeyRef:
+          name: db-secret
+          key: DB_Host
+    - name: DB_User
+      valueFrom:
+        secretKeyRef:
+          name: db-secret
+          key: DB_User
+    - name: DB_Password
+      valueFrom:
+        secretKeyRef:
+          name: db-secret
+          key: DB_Password
+........
+```
+
 ### [Volume and claims](https://kubernetes.io/docs/concepts/storage/)
 
 [emptyDir](https://kubernetes.io/docs/concepts/storage/volumes/#emptydir):
