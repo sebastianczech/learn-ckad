@@ -1231,7 +1231,7 @@ kubeadm token create --print-join-command
 kubeadm upgrade node phase kubelet-config
 ```
 
-### etcd
+### [etcd](https://github.com/etcd-io/website/blob/main/content/en/docs/v3.5/op-guide/recovery.md) - [backup and recovery](https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/#backing-up-an-etcd-cluster)
 
 ```
 docker exec -it kind-control-plane bash
