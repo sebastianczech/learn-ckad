@@ -1291,14 +1291,50 @@ sudo systemctl list-unit-files --type service --all | grep journald.service
 
 ```
 docker exec -it kind-control-plane bash
+
 # apt update; apt install -y kubeadm=1.24.3-00
 # kubeadm upgrade plan
+# kubeadm upgrade apply v1.24.3
 
+# apt update; apt install -y kubelet
 # crictl ps
 # systemctl status kubelet
 # systemctl stop kubelet
-# systmectl restart kubelet
+# systemctl restart kubelet
 # systemctl daemon-reload
+```
+
+### Upgrade control plane and node
+
+#### Control plane
+
+```
+kubectl drain controlplane --ignore-daemonsets
+
+apt update; apt install -y kubeadm=1.26.0-00
+kubeadm upgrade plan
+kubeadm upgrade apply v1.26.0
+
+apt update; apt install -y kubelet=1.26.0-00 
+systemctl restart kubelet
+systemctl daemon-reload
+
+kubectl uncordon  controlplane
+```
+
+#### Node
+
+```
+kubectl drain node01 --ignore-daemonsets
+
+apt update; apt install -y kubeadm=1.26.0-00
+kubeadm upgrade node
+
+apt update; apt install -y kubelet=1.26.0-00 
+systemctl restart kubelet
+systemctl daemon-reload
+
+kubectl uncordon node01
 ```
 
 ### kubeadm
