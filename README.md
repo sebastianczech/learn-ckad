@@ -1355,7 +1355,13 @@ docker exec -it kind-control-plane bash
 # etcdctl snapshot restore snapshotdb --data-dir /var/lib/etcd-restore
 
 # apt install update; apt install vim
-# vim /etc/kubernetes/manifests/etcd.yaml ### change /var/lib/etcd to /var/lib/etcd-restore
+# vim /etc/kubernetes/manifests/etcd.yaml ### change /var/lib/etcd to /var/lib/etcd-restore only in one place:
+
+###   volumes:
+###  - hostPath:
+###      path: /var/lib/etcd-restore
+###      type: DirectoryOrCreate
+###    name: etcd-data
 
 # ls /etc/kubernetes
 # ls /etc/kubernetes/pki
