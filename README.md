@@ -806,6 +806,7 @@ helm package mychart-local-folder
 kubectl config get-contexts
 kubectl config set-context --current --namespace=my-namespace
 kubectl config set-context --current --namespace=
+kubectl config use-context NAME
 kubectl config view
 ```
 
@@ -1366,6 +1367,19 @@ docker exec -it kind-control-plane bash
 # ls /etc/kubernetes
 # ls /etc/kubernetes/pki
 # cat /etc/kubernetes/kubelet.conf
+```
+
+### More with etcd
+
+```
+export ETCDCTL_API=3 
+
+etcdctl \
+ --endpoints=https://127.0.0.1:2379 \
+ --cacert=/etc/etcd/pki/ca.pem \
+ --cert=/etc/etcd/pki/etcd.pem \
+ --key=/etc/etcd/pki/etcd-key.pem \
+  member list
 ```
 
 ### [Metrics](https://github.com/kubernetes-sigs/metrics-server)
