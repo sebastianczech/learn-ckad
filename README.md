@@ -1094,6 +1094,10 @@ openssl req  -noout -text -in ./server.csr
 openssl x509  -noout -text -in ./server.crt
 ```
 
+```
+openssl x509 -in /etc/kubernetes/pki/apiserver.crt -text -noout | grep -i CN
+```
+
 ### [Taints and Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
 
 ```
