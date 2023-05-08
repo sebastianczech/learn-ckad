@@ -1380,6 +1380,29 @@ etcdctl \
  --cert=/etc/etcd/pki/etcd.pem \
  --key=/etc/etcd/pki/etcd-key.pem \
   member list
+
+kubectl describe  pods -n kube-system etcd-cluster-controlplane  | grep advertise-client-urls
+kubectl describe  pods -n kube-system etcd-cluster-controlplane  | grep pki
+
+ETCDCTL_API=3 etcdctl --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/server.crt --key=/etc/kubernetes/pki/etcd/server.key snapshot save /opt/cluster1.db
+
+ETCDCTL_API=3 etcdctl --cacert=/etc/etcd/pki/ca.pem --cert=/etc/etcd/pki/etcd.pem --key=/etc/etcd/pki/etcd-key.pem snapshot restore /opt/cluster2.db --data-dir /var/lib/etcd-data-new
+
+vi /etc/systemd/system/etcd.service 
+
+### [Service]
+### User=etcd
+### Type=notify
+### ExecStart=/usr/local/bin/etcd \
+###   --name etcd-server \
+###   --data-dir=/var/lib/etcd-data-new 
+### ...
+
+chown -R etcd:etcd /var/lib/etcd-data-new
+ls -ld /var/lib/etcd-data-new/
+
+systemctl daemon-reload 
+systemctl restart etcd
 ```
 
 ### [Metrics](https://github.com/kubernetes-sigs/metrics-server)
