@@ -1156,6 +1156,13 @@ spec:
   ...
 ```
 
+### Service account
+
+```
+k create serviceaccount NAMESA
+k create token NAMESA
+```
+
 ### [Certificates](https://kubernetes.io/docs/tasks/administer-cluster/certificates/)
 
 ```
