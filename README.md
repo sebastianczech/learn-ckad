@@ -1040,14 +1040,14 @@ cat <<EOF | kubectl apply -f -
 apiVersion: certificates.k8s.io/v1
 kind: CertificateSigningRequest
 metadata:
-name: seba
+  name: seba
 spec:
-groups:
-- company
-request: $REQUEST
-signerName: kubernetes.io/kube-apiserver-client
-usages:
-- client auth
+  groups:
+  - company
+  request: $REQUEST
+  signerName: kubernetes.io/kube-apiserver-client
+  usages:
+  - client auth
 EOF
 
 kubectl get csr
@@ -1058,6 +1058,27 @@ kubectl config view
 kubectl config set-context seba --user=seba --cluster=kind
 kubectl config get-contexts
 kubectl config use-context seba
+```
+
+```
+cat <<EOF | kubectl apply -f -
+apiVersion: certificates.k8s.io/v1
+kind: CertificateSigningRequest
+metadata:
+  name: $USERNAME
+spec:
+  groups:
+  - system:authenticated
+  request: $REQUEST
+  signerName: kubernetes.io/kube-apiserver-client
+  usages:
+  - client auth
+EOF
+
+kubectl certificate approve $USERNAME
+kubectl certificate deny $USERNAME
+
+kubectl delete csr $CSRNAME
 ```
 
 ```
