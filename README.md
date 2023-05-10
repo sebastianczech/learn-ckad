@@ -343,23 +343,6 @@ kubectl get secret my-secret -o jsonpath='{.data.secret}' | base64 -d
 ```
 
 ```
-kubectl create secret docker-registry private-registry-credentials --docker-server=private-registry-url --docker-username=private-username --docker-password=private-password --docker-email=private-email 
-```
-
-```
-apiVersion: v1
-kind: Pod
-metadata:
-  name: private-reg
-spec:
-  containers:
-  - name: private-reg-container
-    image: <your-private-image>
-  imagePullSecrets:
-  - name: private-registry-credentials
-```
-
-```
 spec:
  containers:
    - name: my-app-name
@@ -464,6 +447,23 @@ spec:
           name: db-secret
           key: DB_Password
 ........
+```
+
+```
+kubectl create secret docker-registry private-registry-credentials --docker-server=private-registry-url --docker-username=private-username --docker-password=private-password --docker-email=private-email 
+```
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: private-reg
+spec:
+  containers:
+  - name: private-reg-container
+    image: <your-private-image>
+  imagePullSecrets:
+  - name: private-registry-credentials
 ```
 
 ### [Volume and claims](https://kubernetes.io/docs/concepts/storage/)
