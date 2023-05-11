@@ -54,6 +54,7 @@ curl http://localhost:8001/api/v1/namespaces/default/pods/$POD_NAME/proxy/
 kubectl logs $POD_NAME
 
 kubectl exec $POD_NAME -- env
+kubectl exec $POD_NAME -- whoami
 kubectl exec -ti $POD_NAME -- bash
 
 cat server.js
@@ -147,6 +148,8 @@ kubectl get pod my-pod-name -o jsonpath='{.status.containerStatuses[0].container
 
 kubectl label pods -l app=existing-label-value --overwrite app=new-label-value
 kubectl get pods -l app=new-label-value
+
+kubectl delete pod my-pod-name --force
 
 kubectl port-forward pod/my-pod-name 8080:80
 
@@ -941,6 +944,20 @@ spec:
        capabilities:
          drop:
            - all
+```
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: security-context-demo-4
+spec:
+  containers:
+  - name: sec-ctx-4
+    image: gcr.io/google-samples/node-hello:1.0
+    securityContext:
+      capabilities:
+        add: ["NET_ADMIN", "SYS_TIME"]
 ```
 
 ### [RBAC](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
