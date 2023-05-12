@@ -168,6 +168,8 @@ kubectl logs --tail=1 -l app=my-deployment-name-1
 
 kubectl delete deploy --all
 kubectl get all
+
+kubectl replace -f my-pod.yaml --force
 ```
 
 ```
@@ -503,6 +505,23 @@ spec:
      hostPath:
        path: /volumes/nginx/cache
        type: DirectoryOrCreate
+```
+
+[HostPath volume](https://kubernetes.io/docs/tasks/configure-pod-container/configure-persistent-volume-storage/#create-a-persistentvolume):
+
+```
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-log
+spec:
+  capacity:
+    storage: 100Mi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: "/pv/log"
 ```
 
 [NSF volume](https://kubernetes.io/docs/concepts/storage/volumes/#nfs):
