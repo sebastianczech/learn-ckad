@@ -579,6 +579,33 @@ kubectl get pv
 kubectl get sc
 ```
 
+[Storage Classes](https://kubernetes.io/docs/concepts/storage/storage-classes/):
+
+```
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: standard
+provisioner: kubernetes.io/aws-ebs
+parameters:
+  type: gp2
+reclaimPolicy: Retain
+allowVolumeExpansion: true
+mountOptions:
+  - debug
+volumeBindingMode: Immediate
+```
+
+```
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: delayed-volume-sc
+provisioner: kubernetes.io/no-provisioner
+reclaimPolicy: Retain
+volumeBindingMode: WaitForFirstConsumer
+```
+
 ### [ReplicaSet](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/):
 
 ```
