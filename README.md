@@ -1664,6 +1664,13 @@ ip link
 ps -aux | grep kubelet | grep --color container-runtime-endpoint
 ls -la /opt/cni/bin
 ls /etc/cni/net.d/
+grep type /etc/cni/net.d/10-flannel.conflist
+```
+
+### [Weave Net](https://www.weave.works/docs/net/latest/kubernetes/kube-addon/)
+
+```
+kubectl apply -f https://github.com/weaveworks/weave/releases/download/v2.8.1/weave-daemonset-k8s.yaml
 ```
 
 ## Links
