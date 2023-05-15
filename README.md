@@ -1647,6 +1647,25 @@ spec:
           port: 3306
 ```
 
+### [Cluster Networking](https://kubernetes.io/docs/concepts/cluster-administration/networking/)
+
+```
+netstat -apn | grep etcd
+grep port /etc/kubernetes/manifests/*
+```
+
+```
+ip addr
+ip route
+ip link
+```
+
+```
+ps -aux | grep kubelet | grep --color container-runtime-endpoint
+ls -la /opt/cni/bin
+ls /etc/cni/net.d/
+```
+
 ## Links
 
 * [Kubernetes Documentation](https://kubernetes.io/docs/home/)
