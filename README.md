@@ -1671,6 +1671,9 @@ grep type /etc/cni/net.d/10-flannel.conflist
 
 ```
 kubectl apply -f https://github.com/weaveworks/weave/releases/download/v2.8.1/weave-daemonset-k8s.yaml
+less /etc/cni/net.d/10-weave.conflist
+ip addr show weave
+kubectl get pods -n kube-system
 ```
 
 ## Links
