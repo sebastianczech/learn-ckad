@@ -290,11 +290,11 @@ data:
   # file-like keys
   game.properties: |
     enemy.types=aliens,monsters
-    player.maximum-lives=5    
+    player.maximum-lives=5
   user-interface.properties: |
     color.good=purple
     color.bad=yellow
-    allow.textmode=true    
+    allow.textmode=true
 ```
 
 ```
@@ -335,7 +335,7 @@ spec:
       - key: "game.properties"
         path: "game.properties"
       - key: "user-interface.properties"
-        path: "user-interface.properties"  
+        path: "user-interface.properties"
 ```
 
 ```
@@ -455,7 +455,7 @@ spec:
 ```
 
 ```
-kubectl create secret docker-registry private-registry-credentials --docker-server=private-registry-url --docker-username=private-username --docker-password=private-password --docker-email=private-email 
+kubectl create secret docker-registry private-registry-credentials --docker-server=private-registry-url --docker-username=private-username --docker-password=private-password --docker-email=private-email
 ```
 
 ```
@@ -1483,7 +1483,7 @@ apt update; apt install -y kubeadm=1.26.0-00
 kubeadm upgrade plan
 kubeadm upgrade apply v1.26.0
 
-apt update; apt install -y kubelet=1.26.0-00 
+apt update; apt install -y kubelet=1.26.0-00
 systemctl restart kubelet
 systemctl daemon-reload
 
@@ -1498,7 +1498,7 @@ kubectl drain node01 --ignore-daemonsets
 apt update; apt install -y kubeadm=1.26.0-00
 kubeadm upgrade node
 
-apt update; apt install -y kubelet=1.26.0-00 
+apt update; apt install -y kubelet=1.26.0-00
 systemctl restart kubelet
 systemctl daemon-reload
 
@@ -1539,7 +1539,7 @@ docker exec -it kind-control-plane bash
 ### More with etcd
 
 ```
-export ETCDCTL_API=3 
+export ETCDCTL_API=3
 
 etcdctl \
  --endpoints=https://127.0.0.1:2379 \
@@ -1555,20 +1555,20 @@ ETCDCTL_API=3 etcdctl --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kuber
 
 ETCDCTL_API=3 etcdctl --cacert=/etc/etcd/pki/ca.pem --cert=/etc/etcd/pki/etcd.pem --key=/etc/etcd/pki/etcd-key.pem snapshot restore /opt/cluster2.db --data-dir /var/lib/etcd-data-new
 
-vi /etc/systemd/system/etcd.service 
+vi /etc/systemd/system/etcd.service
 
 ### [Service]
 ### User=etcd
 ### Type=notify
 ### ExecStart=/usr/local/bin/etcd \
 ###   --name etcd-server \
-###   --data-dir=/var/lib/etcd-data-new 
+###   --data-dir=/var/lib/etcd-data-new
 ### ...
 
 chown -R etcd:etcd /var/lib/etcd-data-new
 ls -ld /var/lib/etcd-data-new/
 
-systemctl daemon-reload 
+systemctl daemon-reload
 systemctl restart etcd
 ```
 
@@ -1673,7 +1673,14 @@ grep type /etc/cni/net.d/10-flannel.conflist
 kubectl apply -f https://github.com/weaveworks/weave/releases/download/v2.8.1/weave-daemonset-k8s.yaml
 less /etc/cni/net.d/10-weave.conflist
 ip addr show weave
-kubectl get pods -n kube-system
+kubectl -n kube-system get pods
+kubectl -n kube-system get ds
+kubectl -n kube-system get pod | grep proxy
+kubectl -n kube-system logs kube-proxy-5l5wn | grep Using
+kubectl -n kube-system describe pod kube-proxy-5l5wn | grep "Controlled By"
+kubectl -n kube-system get pod | grep weave
+kubectl -n kube-system logs weave-net-lnq7t | grep ipalloc-range
+grep cluster-ip-range /etc/kubernetes/manifests/kube-apiserver.yaml
 ```
 
 ## Links
