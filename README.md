@@ -1683,6 +1683,16 @@ kubectl -n kube-system logs weave-net-lnq7t | grep ipalloc-range
 grep cluster-ip-range /etc/kubernetes/manifests/kube-apiserver.yaml
 ```
 
+### [DNS](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)
+
+```
+k -n kube-system get service kube-dns
+k -n kube-system describe deployment coredns
+k -n kube-system describe deployment coredns | grep /etc/coredns/Corefile
+k -n kube-system describe configmaps coredns
+k exec -it my-pod-name -- nslookup my-service-name
+```
+
 ## Links
 
 * [Kubernetes Documentation](https://kubernetes.io/docs/home/)
