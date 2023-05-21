@@ -237,6 +237,7 @@ spec:
 
 ```
 kubectl create configmap my-config-map --from-literal=setting.name='setting.value'
+kubectl -n my-namespace create configmap my-config-map --dry-run=client -o yaml > cm.yml
 kubectl get cm my-config-map
 kubectl exec deploy/my-deploy-name -- sh -c 'printenv | grep "^SETTING"'
 ```
@@ -949,6 +950,8 @@ spec:
 
 ```
 kubectl get ingress
+
+kubectl -n my-namespace create ingress my-ingress-name --dry-run=client -o yaml  --rule=/service1=service1:80 > ing.yml 
 ```
 
 ### [NetworkPolicy](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
