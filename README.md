@@ -643,6 +643,9 @@ selector:
 
 ```
 kubectl get deployment
+kubectl -n my-namespace-name get deploy -o=jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.spec.template.spec.containers[0].image}{"\t"}{.status.readyReplicas}{"\t"}{.metadata.namespace}{"\n"}{end}' -o=custom-columns=DEPLOYMENT:.metadata.name,CONTAINER_IMAGE:.spec.template.spec.containers[0].image,READY_REPLICAS:.status.readyReplicas,NAMESPACE:.metadata.namespace --sort-by=.metadata.name
+
+kubectl create deployment nginx-deploy --image nginx:1.16 --dry-run=client -o yaml > deployment.yml
 
 kubectl scale --replicas=4 deploy/my-deployment-name
 kubectl get rs -l app=my-app-label
@@ -1514,6 +1517,9 @@ kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/
 ```
 kubectl drain controlplane --ignore-daemonsets
 
+kubectl describe node controlplane | grep Taint
+kubectl taint nodes controlplane node-role.kubernetes.io/control-plane:NoSchedule-
+
 apt update; apt install -y kubeadm=1.26.0-00
 kubeadm upgrade plan
 kubeadm upgrade apply v1.26.0
@@ -1726,6 +1732,13 @@ k -n kube-system describe deployment coredns
 k -n kube-system describe deployment coredns | grep /etc/coredns/Corefile
 k -n kube-system describe configmaps coredns
 k exec -it my-pod-name -- nslookup my-service-name
+```
+
+### [kubeconfig](https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/)
+
+```
+grep 6443 /etc/kubernetes/manifests/kube-apiserver.yaml
+kubectl --kubeconfig custom_kubeconfig get pods
 ```
 
 ## Links
