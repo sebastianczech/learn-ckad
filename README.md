@@ -561,6 +561,21 @@ spec:
 ```
 
 ```
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: my-pvc-name
+  namespace: my-namespace-name
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: my-storage-class-name
+```
+
+```
 spec:
  containers:
    - name: my-pod-name
