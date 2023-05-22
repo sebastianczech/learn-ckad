@@ -1475,6 +1475,38 @@ docker exec -it kind-control-plane bash
 # systemctl daemon-reload
 ```
 
+### [Install control plane and node](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/)
+
+#### Control plane
+
+```
+apt update; apt install -y kubeadm=1.26.0-00 kubelet=1.26.0-00
+kubelet --version
+
+export CLUSTER_IP=`ifconfig eth0 | grep inet | awk '{print $2}'`
+kubeadm init --apiserver-cert-extra-sans=controlplane --apiserver-advertise-address $CLUSTER_IP --pod-network-cidr=10.244.0.0/16
+
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+```
+
+#### Node
+
+```
+apt update; apt install -y kubeadm=1.26.0-00 kubelet=1.26.0-00
+kubelet --version
+
+kubeadm join 192.36.39.9:6443 --token gyjqq8.xfnrwsr6elxnd3x6 \
+        --discovery-token-ca-cert-hash sha256:ed301844691f54c5bb1ea4c373123365d9fe850e8bed66cf7ae4a577071d3c76 
+```
+
+#### [Network - Flannel](https://github.com/flannel-io/flannel)
+
+```
+kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
+```
+
 ### Upgrade control plane and node
 
 #### Control plane
