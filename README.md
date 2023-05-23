@@ -206,6 +206,31 @@ spec:
       value: "Such a sweet sorrow"
 ```
 
+```
+apiVersion: v1 
+kind: Pod 
+metadata:
+  name: ubuntu-sleeper
+spec:
+  containers:
+  - name: ubuntu
+    image: ubuntu
+    command: ['sleep', '5000']
+```
+
+```
+apiVersion: v1 
+kind: Pod 
+metadata:
+  name: my-env-app
+spec:
+  containers:
+  - name: env-app
+    image: my-env-app-image
+    command: ["python", "app.py"]
+    args: ["--env", "dev"]
+```
+
 ### [Service](https://kubernetes.io/docs/concepts/services-networking/)
 
 ```
