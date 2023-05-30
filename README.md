@@ -25,6 +25,7 @@ kubectl get nodes
 kubectl version
 kubectl get nodes
 
+kubectl create -f .
 kubectl create deployment kubernetes-bootcamp --image=gcr.io/google-samples/kubernetes-bootcamp:v1
 kubectl get deployments
 
