@@ -728,6 +728,12 @@ spec:
      volumeMounts:
     - name: data
       mountPath: /data
+   - name: second-init-container
+     command:
+     - sh
+     - -c
+     - sleep 20;
+     image: busybox
 ```
 
 ```
