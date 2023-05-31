@@ -209,8 +209,8 @@ spec:
 ```
 
 ```
-apiVersion: v1 
-kind: Pod 
+apiVersion: v1
+kind: Pod
 metadata:
   name: ubuntu-sleeper
 spec:
@@ -221,8 +221,8 @@ spec:
 ```
 
 ```
-apiVersion: v1 
-kind: Pod 
+apiVersion: v1
+kind: Pod
 metadata:
   name: my-env-app
 spec:
@@ -1002,7 +1002,7 @@ spec:
 ```
 kubectl get ingress
 
-kubectl -n my-namespace create ingress my-ingress-name --dry-run=client -o yaml  --rule=/service1=service1:80 > ing.yml 
+kubectl -n my-namespace create ingress my-ingress-name --dry-run=client -o yaml  --rule=/service1=service1:80 > ing.yml
 ```
 
 ### [NetworkPolicy](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
@@ -1683,7 +1683,7 @@ apt update; apt install -y kubeadm=1.26.0-00 kubelet=1.26.0-00
 kubelet --version
 
 kubeadm join 192.36.39.9:6443 --token gyjqq8.xfnrwsr6elxnd3x6 \
-        --discovery-token-ca-cert-hash sha256:ed301844691f54c5bb1ea4c373123365d9fe850e8bed66cf7ae4a577071d3c76 
+        --discovery-token-ca-cert-hash sha256:ed301844691f54c5bb1ea4c373123365d9fe850e8bed66cf7ae4a577071d3c76
 ```
 
 #### [Network - Flannel](https://github.com/flannel-io/flannel)
@@ -1793,6 +1793,68 @@ ls -ld /var/lib/etcd-data-new/
 
 systemctl daemon-reload
 systemctl restart etcd
+```
+
+### [Jobs](https://kubernetes.io/docs/concepts/workloads/controllers/job/)
+
+```
+k create job my-job-name --image=my-job-image --dry-run=client -o yaml > job.yaml
+k get job
+```
+
+```
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: job-pod-failure-policy-example
+spec:
+  completions: 12
+  parallelism: 3
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: main
+        image: docker.io/library/bash:5
+        command: ["bash"]        # example command simulating a bug which triggers the FailJob action
+        args:
+        - -c
+        - echo "Hello world!" && sleep 5 && exit 42
+  backoffLimit: 6
+  podFailurePolicy:
+    rules:
+    - action: FailJob
+      onExitCodes:
+        containerName: main      # optional
+        operator: In             # one of: In, NotIn
+        values: [42]
+    - action: Ignore             # one of: Ignore, FailJob, Count
+      onPodConditions:
+      - type: DisruptionTarget   # indicates Pod disruption
+```
+
+### [CronJobs](https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/)
+
+```
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: hello
+spec:
+  schedule: "* * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: hello
+            image: busybox:1.28
+            imagePullPolicy: IfNotPresent
+            command:
+            - /bin/sh
+            - -c
+            - date; echo Hello from the Kubernetes cluster
+          restartPolicy: OnFailure
 ```
 
 ### [Metrics](https://github.com/kubernetes-sigs/metrics-server)
