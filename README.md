@@ -148,6 +148,8 @@ kubectl get pod my-pod-name -o jsonpath='{.status.containerStatuses[0].container
 
 kubectl label pods -l app=existing-label-value --overwrite app=new-label-value
 kubectl get pods -l app=new-label-value
+kubectl get pods --selector app=new-label-value
+kubectl get all --selector env=prod,bu=department,tier=frontend
 
 kubectl delete pod my-pod-name --force
 
