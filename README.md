@@ -981,22 +981,33 @@ spec:
 ### [Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/)
 
 ```
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
- name: my-ingress
+  name: minimal-ingress
+  namespace: my-namespace
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
 spec:
- rules:
- - http:
-     paths:
-     - path: /
-       backend:
-         serviceName: my-service-name1
-         servicePort: 80
-     - path: /app2
-       backend:
-         serviceName: my-service-name2
-         servicePort: 80
+  ingressClassName: nginx-example
+  rules:
+  - http:
+      paths:
+      - path: /testpath
+        pathType: Prefix
+        backend:
+          service:
+            name: test
+            port:
+              number: 80
+      - path: /testpath2
+        pathType: Prefix
+        backend:
+          service:
+            name: test2
+            port:
+              number: 80
 ```
 
 ```
