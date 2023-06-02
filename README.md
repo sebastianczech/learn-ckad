@@ -639,6 +639,8 @@ mountOptions:
 volumeBindingMode: Immediate
 ```
 
+Local volumes do not currently support dynamic provisioning (`provisioner: kubernetes.io/no-provisioner`):
+
 ```
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
