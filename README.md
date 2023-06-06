@@ -1673,6 +1673,14 @@ docker exec -it kind-control-plane bash
 # systemctl daemon-reload
 ```
 
+### Troubleshoot kubelet
+
+```
+journalctl -u kubelet -f
+less /var/lib/kubelet/config.yaml
+less /etc/kubernetes/kubelet.conf
+```
+
 ### [Install control plane and node](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/)
 
 #### Control plane
