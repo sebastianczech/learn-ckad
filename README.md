@@ -1991,6 +1991,10 @@ kubectl -n kube-system describe pod kube-proxy-5l5wn | grep "Controlled By"
 kubectl -n kube-system get pod | grep weave
 kubectl -n kube-system logs weave-net-lnq7t | grep ipalloc-range
 grep cluster-ip-range /etc/kubernetes/manifests/kube-apiserver.yaml
+kubectl -n kube-system logs kube-proxy-6vzk2 | grep config
+kubectl -n kube-system get cm kube-proxy -o yaml | grep config
+kubectl -n kube-system edit ds kube-proxy
+kubectl -n kube-system get ds kube-proxy -o yaml | grep "\-\-config="
 ```
 
 ### [DNS](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)
