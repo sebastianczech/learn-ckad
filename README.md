@@ -620,6 +620,7 @@ spec:
 kubectl get pvc
 kubectl get pv
 kubectl get pv --sort-by=.spec.capacity.storage
+kubectl get pv --sort-by=.spec.capacity.storage --output custom-columns=NAME:metadata.name,CAPACITY:spec.capacity.storage
 kubectl get sc
 ```
 
