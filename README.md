@@ -928,6 +928,8 @@ kubectl config set-context --current --namespace=my-namespace
 kubectl config set-context --current --namespace=
 kubectl config use-context NAME
 kubectl config view
+kubectl config view --kubeconfig=/home/seba/my-kube-config
+kubectl config view --kubeconfig=/home/seba/my-kube-config -o jsonpath="{.users[*].name}"
 ```
 
 ## [Liveness, Readiness and Startup Probes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
@@ -1400,6 +1402,8 @@ openssl x509 -in /etc/kubernetes/pki/apiserver.crt -text -noout | grep -i CN
 kubectl label node kind-worker disktype=ssd
 kubectl get nodes --show-labels
 kubectl get nodes -o=jsonpath='{range .items[*]}{.metadata.name}{.spec.taints[*].key}{end}'
+kubectl get nodes -o=jsonpath="{.items[*]['metadata.name']}"
+kubectl get nodes -o=jsonpath='{range .items[*]}{.metadata.name}{.status.nodeInfo.osImage}{end}'
 
 kubectl taint nodes node1 key1=value1:NoSchedule
 kubectl taint nodes node1 key1=value1:NoSchedule-
