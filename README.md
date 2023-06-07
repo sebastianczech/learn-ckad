@@ -619,6 +619,7 @@ spec:
 ```
 kubectl get pvc
 kubectl get pv
+kubectl get pv --sort-by=.spec.capacity.storage
 kubectl get sc
 ```
 
