@@ -932,6 +932,7 @@ kubectl config use-context NAME
 kubectl config view
 kubectl config view --kubeconfig=/home/seba/my-kube-config
 kubectl config view --kubeconfig=/home/seba/my-kube-config -o jsonpath="{.users[*].name}"
+kubectl config view --kubeconfig=my-kube-config -o jsonpath="{.contexts[?(@.context.user=='my-user-name')].name}"
 ```
 
 ## [Liveness, Readiness and Startup Probes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
