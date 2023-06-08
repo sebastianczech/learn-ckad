@@ -1110,6 +1110,10 @@ kubectl auth can-i delete pods -n default --as seba
 ```
 
 ```
+kubectl describe pod kube-apiserver-controlplane -n kube-system | grep "\-\-authorization"
+```
+
+```
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
@@ -1118,6 +1122,30 @@ metadata:
 rules:
 - apiGroups: [""]
   resources: ["pods"]
+```
+
+```
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: my-deployment-role
+  namespace: my-namespace
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - get
+  - watch
+  - create
+  - delete
+- apiGroups:
+  - apps
+  resources:
+  - deployments
+  verbs:
+  - create
 ```
 
 ```
