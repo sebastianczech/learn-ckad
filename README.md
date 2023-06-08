@@ -1181,6 +1181,11 @@ roleRef:
 ```
 
 ```
+k create clusterrole node-admin --verb=get,list,watch,create,delete --resource=node
+k create clusterrolebinding node-admin --clusterrole node-admin --user seba
+```
+
+```
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -1262,6 +1267,48 @@ roleRef:
   kind: ClusterRole
   name: storage-admin
   apiGroup: rbac.authorization.k8s.io
+```
+
+```
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: storage-admin
+rules:
+- apiGroups: [""]
+  resources: ["persistentvolumes"]
+  verbs: ["get", "watch", "list", "create", "delete"]
+- apiGroups: ["storage.k8s.io"]
+  resources: ["storageclasses"]
+  verbs: ["get", "watch", "list", "create", "delete"]
+
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: user-storage-admin
+subjects:
+- kind: User
+  name: seba
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: ClusterRole
+  name: storage-admin
+  apiGroup: rbac.authorization.k8s.io
+```
+
+### [API resources](https://kubernetes.io/docs/reference/kubectl/cheatsheet/)
+
+```
+kubectl api-resources
+
+kubectl api-resources --namespaced=true      # All namespaced resources
+kubectl api-resources --namespaced=false     # All non-namespaced resources
+kubectl api-resources -o name                # All resources with simple output (only the resource name)
+kubectl api-resources -o wide                # All resources with expanded (aka "wide") output
+kubectl api-resources --verbs=list,get       # All resources that support the "list" and "get" request verbs
+kubectl api-resources --api-group=extensions # All resources in the "extensions" API group
 ```
 
 ### Users
