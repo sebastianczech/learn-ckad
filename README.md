@@ -376,6 +376,43 @@ kubectl get secret my-secret -o jsonpath='{.data.secret}' | base64 -d
 ```
 
 ```
+kubectl create secret tls my-name-secret-tls --cert=my-tls.crt --key=my-tls.key
+```
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-with-tls
+  labels:
+    app: app-with-tls
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app-with-tls
+  template:
+    metadata:
+      labels:
+        app: app-with-tls
+    spec:
+      containers:
+      - name: server
+        image: my-image
+        ports:
+        - containerPort: 8443
+          name: api
+        volumeMounts:
+        - name: app-with-tls-certs
+          mountPath: /opt/tls
+          readOnly: true
+      volumes:
+      - name: app-with-tls-certs
+        secret:
+          secretName: my-name-secret-tls
+```
+
+```
 spec:
  containers:
    - name: my-app-name
