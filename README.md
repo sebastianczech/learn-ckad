@@ -1474,6 +1474,18 @@ openssl x509  -noout -text -in ./server.crt
 openssl x509 -in /etc/kubernetes/pki/apiserver.crt -text -noout | grep -i CN
 ```
 
+### [Admission Controllers](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/)
+
+```
+kube-apiserver -h | grep enable-admission-plugins
+kubectl exec -it kube-apiserver-controlplane -n kube-system -- kube-apiserver -h | grep 'enable-admission-plugins'
+
+ps -ef | grep kube-apiserver | grep admission-plugins
+
+grep enable-admission-plugins /etc/kubernetes/manifests/kube-apiserver.yaml
+#    - --enable-admission-plugins=NodeRestriction,NamespaceAutoProvision
+```
+
 ### [Taints and Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
 
 ```
