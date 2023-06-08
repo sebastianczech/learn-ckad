@@ -1346,6 +1346,38 @@ kubectl api-resources -o name                # All resources with simple output 
 kubectl api-resources -o wide                # All resources with expanded (aka "wide") output
 kubectl api-resources --verbs=list,get       # All resources that support the "list" and "get" request verbs
 kubectl api-resources --api-group=extensions # All resources in the "extensions" API group
+
+kubectl explain job
+
+kubectl proxy 8001&
+curl localhost:8001/apis/authorization.k8s.io
+{
+  "kind": "APIGroup",
+  "apiVersion": "v1",
+  "name": "authorization.k8s.io",
+  "versions": [
+    {
+      "groupVersion": "authorization.k8s.io/v1",
+      "version": "v1"
+    }
+  ],
+  "preferredVersion": {
+    "groupVersion": "authorization.k8s.io/v1",
+    "version": "v1"
+  }
+}
+
+grep runtime-config /etc/kubernetes/manifests/kube-apiserver.yaml
+    - --runtime-config=rbac.authorization.k8s.io/v1alpha1
+```
+
+### [kubectl convert plugin](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/)
+
+```
+curl -LO https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl-convert
+chmod +x kubectl-convert
+mv kubectl-convert /usr/local/bin/kubectl-convert
+kubectl-convert -f ingress-old.yaml --output-version networking.k8s.io/v1 | kubectl apply -f -
 ```
 
 ### Users
