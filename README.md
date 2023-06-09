@@ -1810,6 +1810,9 @@ spec:
 kubectl get crd
 
 kubectl get crontab
+
+kubectl get crd crontab
+kubectl describe crd crontab
 ```
 
 ### Linux services
