@@ -939,11 +939,15 @@ spec:
 ```
 helm repo add myrepo https://myrepo
 helm repo update
+helm repo list
 
 helm search repo myapp --versions
+helm search hub myapp
 helm show values myrepo/myapp --version 1.0.0
 
 helm install --set servicePort=8010 --set replicaCount=1 myapp-name myrepo/myapp --version 1.0.0
+helm pull --untar myrepo/myapp
+helm install myapp-name ./local-dir-with-myapp
 helm upgrade --set servicePort=8010 --set replicaCount=3 myapp-name myrepo/myapp --version 1.0.0
 helm upgrade --reuse-values --atomic myapp-name myrepo/myapp --version 1.0.0
 helm uninstall myapp-name
