@@ -536,6 +536,33 @@ spec:
   - name: private-registry-credentials
 ```
 
+```
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: my-pod-with-secret
+  name: my-pod-with-secret
+  namespace: secret-space
+spec:
+  volumes:
+  - name: secret-volume
+    secret:
+      secretName: my-secret-file
+  containers:
+  - command:
+    - sleep
+    - "4800"
+    image: busybox
+    name: secret-container
+    volumeMounts:
+    - name: secret-volume
+      readOnly: true
+      mountPath: "/opt/secrets"
+```
+
 ### [Volume and claims](https://kubernetes.io/docs/concepts/storage/)
 
 [emptyDir](https://kubernetes.io/docs/concepts/storage/volumes/#emptydir):
