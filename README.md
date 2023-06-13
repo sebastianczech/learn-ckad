@@ -239,6 +239,7 @@ spec:
 kubectl expose -f file.yaml --type LoadBalancer --port 8080 --target-port 80
 kubectl get svc my-service-name
 kubectl get svc my-service-name -o jsonpath='http://{.status.loadBalancer.ingress[0].*}:8080'
+kubectl get endpointslices -l kubernetes.io/service-name=my-service-name
 kubectl get endpoints my-service-name
 kubectl exec my-pod-name -- sh -c 'nslookup my-service-name | grep "^[^*]"'
 kubectl exec my-pod-name -- sh -c 'nslookup kube-dns.kube-system.svc.cluster.local | grep "^[^*]"'
@@ -640,6 +641,10 @@ spec:
 ```
 
 ```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod-name
 spec:
  containers:
    - name: my-pod-name
@@ -651,6 +656,49 @@ spec:
    - name: data
      persistentVolumeClaim:
        claimName: my-pvc-name
+```
+
+```
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: log-claim
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 200Mi
+  storageClassName: manual
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: log-volume
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: "/opt/volume/nginx"
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: logger
+spec:
+  containers:
+    - name: logger
+      image: nginx:alpine
+      volumeMounts:
+      - mountPath: "/var/www/nginx"
+        name: logs
+  volumes:
+    - name: logs
+      persistentVolumeClaim:
+        claimName: log-claim
 ```
 
 ```
@@ -1082,6 +1130,28 @@ spec:
          app: my-db-label
    ports:
    - port: app
+```
+
+```
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: all-connectivity-between-pods
+  namespace: default
+spec:
+  policyTypes:
+  - Ingress
+  podSelector:
+    matchLabels:
+      run: secure-pod
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          name: webapp-color
+    ports:
+    - protocol: TCP
+      port: 80
 ```
 
 ```
