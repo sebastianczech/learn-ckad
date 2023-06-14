@@ -368,6 +368,45 @@ spec:
 ```
 
 ```
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: time-check
+  name: time-check
+  namespace: dvl1987
+spec:
+  containers:
+  - image: busybox
+    name: time-check
+    resources: {}
+    env:
+       - name: TIME_FREQ
+         valueFrom:
+           configMapKeyRef:
+             name: time-config
+             key: TIME_FREQ
+    command: ["sh", "-c", "while true; do date; sleep $TIME_FREQ; done > /opt/time/time-check.log" ]
+    volumeMounts: 
+      - name: logs
+        mountPath: /opt/time
+  volumes:
+    - name: logs
+      hostPath:
+        path: /root/data
+        type: DirectoryOrCreate
+status: {}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: time-config
+  namespace: dvl1987
+data:
+  TIME_FREQ: "10"
+```
+
+```
 echo -n 'plaintext' | base64
 echo -n 'cGxhaW50ZXh0' | base64 --decode
 
@@ -808,6 +847,33 @@ kubectl create deployment nginx-deploy --image nginx:1.16 --dry-run=client -o ya
 kubectl scale --replicas=4 deploy/my-deployment-name
 kubectl get rs -l app=my-app-label
 kubectl get po -l app=my-app-label --show-labels
+```
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nginx-deploy
+  name: nginx-deploy
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: nginx-deploy
+  strategy: 
+    type: RollingUpdate
+    rollingUpdate: 
+      maxSurge: 1
+      maxUnavailable: 2
+  template:
+    metadata:
+      labels:
+        app: nginx-deploy
+    spec:
+      containers:
+      - image: nginx:1.17
+        name: nginx
 ```
 
 ### [DaemonSet](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/)
