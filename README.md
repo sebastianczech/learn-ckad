@@ -2213,6 +2213,7 @@ spec:
         - -c
         - echo "Hello world!" && sleep 5 && exit 42
   backoffLimit: 6
+  activeDeadlineSeconds: 100
   podFailurePolicy:
     rules:
     - action: FailJob
