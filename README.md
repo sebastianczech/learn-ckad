@@ -218,6 +218,7 @@ spec:
   - name: ubuntu
     image: ubuntu
     command: ['sleep', '5000']
+  nodeName: controlplane
 ```
 
 ```
