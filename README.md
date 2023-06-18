@@ -292,6 +292,16 @@ spec:
  type: NodePort          # This Service is available on node IP addresses.
 ```
 
+```
+kubectl run nginx-resolver-pod --image=nginx
+kubectl expose pod nginx-resolver-pod --name=nginx-resolver-service --port=80 --target-port=80 --type=ClusterIP
+
+kubectl run test-nslookup --image=busybox --rm -it --restart=Never -- nslookup nginx-resolver-service
+
+kubectl get pod nginx-resolver-pod -o wide
+kubectl run test-nslookup --image=busybox: --rm -it --restart=Never -- nslookup IP-POD-IN-FORMAT-MINUS.default.pod
+```
+
 ### [ConfigMap and Secrets](https://kubernetes.io/docs/concepts/configuration/)
 
 ```
