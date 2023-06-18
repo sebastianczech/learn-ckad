@@ -234,6 +234,36 @@ spec:
     args: ["--env", "dev"]
 ```
 
+### [Static pod](https://kubernetes.io/docs/tasks/configure-pod-container/static-pod/)
+
+```
+ssh my-node1
+
+mkdir -p /etc/kubernetes/manifests/
+cat <<EOF >/etc/kubernetes/manifests/static-web.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: static-web
+  labels:
+    role: myrole
+spec:
+  containers:
+    - name: web
+      image: nginx
+      ports:
+        - name: web
+          containerPort: 80
+          protocol: TCP
+EOF
+
+vi /var/lib/kubelet/config.yaml
+
+KUBELET_ARGS="--cluster-dns=10.254.0.10 --cluster-domain=kube.local --pod-manifest-path=/etc/kubernetes/manifests/"
+
+systemctl restart kubelet
+```
+
 ### [Service](https://kubernetes.io/docs/concepts/services-networking/)
 
 ```
