@@ -1809,6 +1809,8 @@ kubectl get nodes --show-labels
 kubectl get nodes -o=jsonpath='{range .items[*]}{.metadata.name}{.spec.taints[*].key}{end}'
 kubectl get nodes -o=jsonpath="{.items[*]['metadata.name']}"
 kubectl get nodes -o=jsonpath='{range .items[*]}{.metadata.name}{.status.nodeInfo.osImage}{end}'
+kubectl get nodes -o=jsonpath='{range .items[*]}{"InternalIP of "}{.metadata.name}{" "}{.status.addresses[0].address}{"\n"}{end}'
+kubectl get nodes -o jsonpath='{.items[*].status.addresses[?(@.type=="InternalIP")].address}' 
 
 kubectl taint nodes node1 key1=value1:NoSchedule
 kubectl taint nodes node1 key1=value1:NoSchedule-
