@@ -2373,6 +2373,24 @@ spec:
           port: 3306
 ```
 
+```
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-all-to-pod-on-port-80
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      run: policy-applied-to-pod-with-this-name
+  policyTypes:
+    - Ingress
+  ingress:
+    - ports:
+      - protocol: TCP
+        port: 80
+```
+
 ### [Cluster Networking](https://kubernetes.io/docs/concepts/cluster-administration/networking/)
 
 ```
