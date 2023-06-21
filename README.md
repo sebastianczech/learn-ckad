@@ -1338,6 +1338,7 @@ spec:
  securityContext:
    runAsUser: 65534
    runAsGroup: 3000
+   fsGroup: 2000
  containers:
    - image: my-image-name
      securityContext:
