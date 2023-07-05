@@ -2305,6 +2305,23 @@ cd kubernetes-metrics-server/
 kubectl create -f .
 ```
 
+another approach:
+
+```
+k apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+k -n kube-system edit deployments.apps metrics-server
+k -n kube-system get deployments.apps metrics-server -o yaml | grep kubelet-insecure-tls -B7 -A1
+      containers:
+      - args:
+        - --cert-dir=/tmp
+        - --secure-port=4443
+        - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
+        - --kubelet-use-node-status-port
+        - --metric-resolution=15s
+        - --kubelet-insecure-tls
+        image: registry.k8s.io/metrics-server/metrics-server:v0.6.3
+```
+
 ### [Network Policies](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
 
 ```
