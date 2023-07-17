@@ -2479,3 +2479,4 @@ kubectl --kubeconfig custom_kubeconfig get pods
 * [CKAD Exam Study Guide: A Complete Resource for CKAD Aspirants](https://devopscube.com/ckad-exam-study-guide/)
 * [Answers to Five Certified Kubernetes Application Developer CKAD Exam Questions (2021)](https://thospfuller.com/2020/11/09/answers-to-five-kubernetes-ckad-practice-questions-2021/)
 * [kubectl Cheat Sheet](https://kubernetes.io/docs/reference/kubectl/cheatsheet/)
+* [CKA Exercises by Chad M. Crowell](https://killercoda.com/chadmcrowell/course/cka/)
